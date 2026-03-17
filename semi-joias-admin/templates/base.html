@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Sistema{% endblock %}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #111;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 14px;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 220px;
+      min-height: 100vh;
+      background: #161616;
+      border-right: 1px solid #1f1f1f;
+      display: flex;
+      flex-direction: column;
+      padding: 28px 0;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: .04em;
+      padding: 0 20px 24px;
+      border-bottom: 1px solid #1f1f1f;
+    }
+
+    .sidebar-logo span { color: #444; font-weight: 400; }
+
+    .sidebar-section { margin-top: 20px; }
+
+    .sidebar-label {
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #3a3a3a;
+      padding: 0 20px 8px;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      color: #666;
+      text-decoration: none;
+      font-size: 13px;
+      transition: background .12s, color .12s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar a:hover { background: #1c1c1c; color: #ccc; }
+
+    .sidebar a.active {
+      color: #fff;
+      background: #1c1c1c;
+      border-left-color: #fff;
+    }
+
+    .sidebar a svg { flex-shrink: 0; opacity: .6; }
+    .sidebar a.active svg { opacity: 1; }
+
+    /* ── Main ── */
+    .main {
+      flex: 1;
+      padding: 40px;
+      overflow: auto;
+    }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <nav class="sidebar">
+    <div class="sidebar-logo">Sistema <span>/ gestão</span></div>
+
+    <div class="sidebar-section">
+      <p class="sidebar-label">Cadastros</p>
+
+      <a href="#" {% if active == 'clientes' %}class="active"{% endif %}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+        Clientes
+      </a>
+
+      <a href="#" {% if active == 'maletas' %}class="active"{% endif %}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+        </svg>
+        Maletas
+      </a>
+
+      <a href="#" {% if active == 'produtos' %}class="active"{% endif %}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73L13 2.27a2 2 0 0 0-2 0L4 6.27A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l6 3.46a2 2 0 0 0 2 0l6-3.46A2 2 0 0 0 21 16z"/>
+        </svg>
+        Produtos
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <p class="sidebar-label">Movimentações</p>
+
+      <a href="#" {% if active == 'vendas' %}class="active"{% endif %}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+        Vendas
+      </a>
+
+      <a href="#" {% if active == 'itens' %}class="active"{% endif %}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+        Itens de Venda
+      </a>
+    </div>
+  </nav>
+
+  <main class="main">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

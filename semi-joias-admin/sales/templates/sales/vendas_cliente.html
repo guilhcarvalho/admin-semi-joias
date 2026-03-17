@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Vendas de {{ cliente.full_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 28px;
+    color: #fff;
+  }
+
+  h1 span {
+    font-size: 13px;
+    font-weight: 400;
+    color: #555;
+    margin-left: 10px;
+  }
+
+  table {
+    width: 100%;
+    max-width: 760px;
+    border-collapse: collapse;
+  }
+
+  thead tr { border-bottom: 1px solid #2a2a2a; }
+
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #555;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #1e1e1e;
+    transition: background .12s;
+  }
+
+  tbody tr:hover { background: #1a1a1a; }
+
+  td { padding: 12px 14px; color: #ccc; }
+  td:first-child { color: #f0f0f0; font-weight: 500; }
+  tbody tr:hover td:first-child { color: #fff; }
+
+  .empty { padding: 40px 14px; color: #444; }
+</style>
+{% endblock %}
+
+{% block content %}
+  <div style="display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin-bottom: 28px;">
+    <h1 style="margin-bottom: 0;">{{ cliente.full_name }} <span>{{ vendas|length }} no total</span></h1>
+    <a href="{% url 'clients:atualizar' cliente.id %}" style="
+      display: inline-block;
+      padding: 8px 16px;
+      background: #fff;
+      color: #111;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 4px;
+    ">+ Atualizar cliente</a>
+    <form method="post" action="{% url 'clients:deletar' cliente.id %}" onsubmit="return confirm('Tem certeza que deseja deletar {{ cliente.full_name }}? Todos os dados desse cliente serão apagados!')">
+    {% csrf_token %}
+    <button type="submit" style="
+    display: inline-block;
+    padding: 8px 16px;
+    background: #c0392b;
+    color: #fff;
+    border: none;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    ">Deletar cliente</button>
+    </form>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Maleta</th>
+        <th>Valor</th>
+        <th>Pagamento</th>
+        <th>Situação</th>
+        <th>Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for venda in vendas %}
+      <tr>
+        <td>{{ venda.briefcase }}</td>
+        <td>R$ {{ venda.sale_value }}</td>
+        <td>{{ venda.get_payment_method_display }}</td>
+        <td>{{ venda.get_in_good_standing_display }}</td>
+        <td>{{ venda.created_at|date:"d/m/Y" }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="empty">Nenhuma venda encontrada para este cliente.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

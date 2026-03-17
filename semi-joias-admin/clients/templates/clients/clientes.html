@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Clientes{% endblock %}
+
+{% block extra_css %}
+<style>
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 28px;
+    color: #fff;
+  }
+
+  h1 span {
+    font-size: 13px;
+    font-weight: 400;
+    color: #555;
+    margin-left: 10px;
+  }
+
+  table {
+    width: 100%;
+    max-width: 600px;
+    border-collapse: collapse;
+  }
+
+  thead tr { border-bottom: 1px solid #2a2a2a; }
+
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #555;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #1e1e1e;
+    transition: background .12s;
+  }
+
+  tbody tr:hover { background: #1a1a1a; }
+
+  td { padding: 12px 14px; color: #ccc; }
+  td:first-child { color: #f0f0f0; font-weight: 500; }
+  tbody tr:hover td:first-child { color: #fff; }
+
+  .empty { padding: 40px 14px; color: #444; }
+</style>
+{% endblock %}
+
+{% block content %}
+  <div style="display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin-bottom: 28px;">
+    <h1 style="margin-bottom: 0;">Clientes <span>{{ clientes|length }} no total</span></h1>
+    <a href="{% url 'clients:criar' %}" style="
+      display: inline-block;
+      padding: 8px 16px;
+      background: #fff;
+      color: #111;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 4px;
+    ">+ Criar cliente</a>
+  </div>
+
+  <form method="get" style="display:flex; gap:12px; margin-bottom:28px;">
+    <input type="text" name="nome" value="{{ filtro_nome }}" placeholder="Buscar por nome…">
+    <input type="text" name="celular" value="{{ filtro_celular }}" placeholder="Buscar por celular…">
+    <button type="submit">Filtrar</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Celular</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cliente in clientes %}
+      <tr>
+        <td>
+          <a href="{% url 'sales:vendas_por_cliente' cliente.id %}" 
+            style="color: inherit; text-decoration: none;">
+            {{ cliente.full_name }}
+          </a>
+        </td>
+        <td>{{ cliente.formatted_phone }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td class="empty" colspan="2">Nenhum cliente cadastrado.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
