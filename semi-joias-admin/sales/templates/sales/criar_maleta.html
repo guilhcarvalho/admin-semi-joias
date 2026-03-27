@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Carol Semijoias | Registrar cliente{% endblock %}
+{% block title %}Carol Semijoias | Registrar maleta{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -80,31 +80,31 @@
 {% endblock %}
 
 {% block content %}
-  <a href="{% url 'clients:lista' %}" class="btn-voltar">
+  <a href="{% url 'sales:maletas_lista' %}" class="btn-voltar">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="15 18 9 12 15 6"/>
     </svg>
     Voltar
   </a>
 
-  <h1>Registrar cliente</h1>
+  <h1>Registrar maleta</h1>
 
   <form method="post" class="form-wrap">
     {% csrf_token %}
 
     <div class="field">
-      <label for="first_name">Primeiro nome</label>
-      <input type="text" id="first_name" name="first_name" placeholder="Primeiro nome" required>
+      <label for="month">Mês</label>
+      <input type="text" id="month" name="month" placeholder="Mês" required>
     </div>
 
     <div class="field">
-      <label for="last_name">Sobrenome</label>
-      <input type="text" id="last_name" name="last_name" placeholder="Sobrenome" required>
+      <label for="order_number">Número da ordem</label>
+      <input type="text" id="order_number" name="order_number" placeholder="Número da ordem" required>
     </div>
 
     <div class="field">
-      <label for="phone_number">Celular</label>
-      <input type="text" id="phone_number" name="phone_number" placeholder="Número de celular" maxlength="11" required>
+      <label for="order_value">Valor da ordem</label>
+      <input type="text" id="order_value" name="order_value" placeholder="Valor da ordem" maxlength="11" required>
     </div>
 
     <button type="submit" class="btn-submit">Salvar</button>

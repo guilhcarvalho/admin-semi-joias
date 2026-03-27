@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Clientes{% endblock %}
+{% block title %}Carol Semijoias | Clientes{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -67,8 +67,8 @@
   </div>
 
   <form method="get" style="display:flex; gap:12px; margin-bottom:28px;">
-    <input type="text" name="nome" value="{{ filtro_nome }}" placeholder="Buscar por nome…">
-    <input type="text" name="celular" value="{{ filtro_celular }}" placeholder="Buscar por celular…">
+    <input type="text" name="nome" value="{{ name_filter }}" placeholder="Buscar por nome…">
+    <input type="text" name="celular" value="{{ phone_filter }}" placeholder="Buscar por celular…">
     <button type="submit">Filtrar</button>
   </form>
 

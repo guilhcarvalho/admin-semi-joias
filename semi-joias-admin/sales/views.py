@@ -15,7 +15,7 @@
 
 from django.shortcuts import render, get_object_or_404
 from clients.models import Cliente
-from .models import Vendas
+from .models import Vendas, Maleta
 
 def vendas_por_cliente(request, id):
     cliente = get_object_or_404(Cliente, id=id)
@@ -26,3 +26,23 @@ def vendas_por_cliente(request, id):
         'vendas': vendas,
         'active': 'vendas',  
     })
+    
+def exibir_maletas(request):
+    maletas = Maleta.objects.all()
+    
+    month = request.GET.get('month', '').strip()
+    order_number = request.GET.get('order', '').strip()
+    
+    if month:
+        maletas = maletas.filter(month__icontains=month)
+        
+    if order_number:
+        maletas = maletas.filter(order_number__icontains=order_number)
+    
+    return render(request, 'sales/maletas.html',{
+        'maletas': maletas,
+        'active': 'maletas',
+        'month_filter': month,
+        'order_number_filter': order_number,
+    })
+    

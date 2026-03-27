@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{% block title %}Sistema{% endblock %}</title>
+  <title>{% block title %}Carol Semijoias{% endblock %}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -29,7 +29,7 @@
     }
 
     .sidebar-logo {
-      font-size: 13px;
+      font-size: 22px;
       font-weight: 600;
       color: #fff;
       letter-spacing: .04em;
@@ -42,10 +42,10 @@
     .sidebar-section { margin-top: 20px; }
 
     .sidebar-label {
-      font-size: 10px;
+      font-size: 14px;
       letter-spacing: .12em;
       text-transform: uppercase;
-      color: #3a3a3a;
+      color: #555;
       padding: 0 20px 8px;
     }
 
@@ -84,8 +84,11 @@
 <body>
 
   <nav class="sidebar">
-    <div class="sidebar-logo">Sistema <span>/ gestão</span></div>
-
+    <div class="sidebar-logo">
+      Carol Semijoias 
+      <p style="font-size: 13px; font-weight: 400; color: #555; margin-top: 4px; letter-spacing: .06em;">Sistema de gestão</p>
+    </div>
+      
     <div class="sidebar-section">
       <p class="sidebar-label">Cadastros</p>
 
@@ -103,14 +106,6 @@
         Maletas
       </a>
 
-      <a href="#" {% if active == 'produtos' %}class="active"{% endif %}>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 16V8a2 2 0 0 0-1-1.73L13 2.27a2 2 0 0 0-2 0L4 6.27A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l6 3.46a2 2 0 0 0 2 0l6-3.46A2 2 0 0 0 21 16z"/>
-        </svg>
-        Produtos
-      </a>
-    </div>
-
     <div class="sidebar-section">
       <p class="sidebar-label">Movimentações</p>
 
@@ -119,14 +114,6 @@
           <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
         </svg>
         Vendas
-      </a>
-
-      <a href="#" {% if active == 'itens' %}class="active"{% endif %}>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
-          <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
-        </svg>
-        Itens de Venda
       </a>
     </div>
   </nav>

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Carol Semijoias | Vendas de {{ cliente.full_name }}{% endblock %}
+{% block title %}Carol Semijoias | Maletas{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -20,7 +20,7 @@
 
   table {
     width: 100%;
-    max-width: 760px;
+    max-width: 600px;
     border-collapse: collapse;
   }
 
@@ -53,8 +53,8 @@
 
 {% block content %}
   <div style="display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin-bottom: 28px;">
-    <h1 style="margin-bottom: 0;">{{ cliente.full_name }} <span>{{ vendas|length }} no total</span></h1>
-    <a href="{% url 'clients:atualizar' cliente.id %}" style="
+    <h1 style="margin-bottom: 0;">Maletas <span>{{ maletas|length }} no total</span></h1>
+    <a href="{% url 'sales:maletas_lista' %}" style="
       display: inline-block;
       padding: 8px 16px;
       background: #fff;
@@ -63,46 +63,39 @@
       font-size: 13px;
       font-weight: 600;
       border-radius: 4px;
-    ">+ Atualizar cliente</a>
-    <form method="post" action="{% url 'clients:deletar' cliente.id %}" onsubmit="return confirm('Tem certeza que deseja deletar {{ cliente.full_name }}? Todos os dados desse cliente serão apagados!')">
-    {% csrf_token %}
-    <button type="submit" style="
-    display: inline-block;
-    padding: 8px 16px;
-    background: #c0392b;
-    color: #fff;
-    border: none;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-    border-radius: 4px;
-    cursor: pointer;
-    ">Deletar cliente</button>
-    </form>
+    ">+ Registrar maleta</a>
   </div>
+
+  <form method="get" style="display:flex; gap:12px; margin-bottom:28px;">
+    <input type="text" name="month" value="{{ month_filter }}" placeholder="Buscar por mês…">
+    <input type="text" name="order" value="{{ order_number_filter }}" placeholder="Buscar por número da ordem…">
+    <button type="submit">Filtrar</button>
+  </form>
 
   <table>
     <thead>
       <tr>
-        <th>Maleta</th>
-        <th>Valor</th>
-        <th>Pagamento</th>
-        <th>Situação</th>
-        <th>Data</th>
+        <th>Número da ordem</th>
+        <th>Valor da maleta</th>
+        <th>Valor vendido</th>
+        <th>Mês</th>
+        <th>Data de ínicio</th>
+        <th>Data de encerramento</th>
       </tr>
     </thead>
     <tbody>
-      {% for venda in vendas %}
+      {% for maleta in maletas %}
       <tr>
-        <td>{{ venda.briefcase }}</td>
-        <td>R$ {{ venda.sale_value }}</td>
-        <td>{{ venda.get_payment_method_display }}</td>
-        <td>{{ venda.get_in_good_standing_display }}</td>
-        <td>{{ venda.created_at|date:"d/m/Y" }}</td>
+        <td>{{ maleta.order_number }}</td>
+        <td>{{ maleta.order_value }}</td>
+        <td>{{ maleta.value_sold }}</td>
+        <td>{{ maleta.month }}</td>
+        <td>{{ maleta.start_sale_period }}</td>
+        <td>{{ maleta.end_sale_period }}</td>
       </tr>
       {% empty %}
       <tr>
-        <td colspan="5" class="empty">Nenhuma venda encontrada para este cliente.</td>
+        <td class="empty" colspan="2">Nenhuma maleta cadastrada.</td>
       </tr>
       {% endfor %}
     </tbody>
