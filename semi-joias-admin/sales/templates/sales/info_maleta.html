@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}{{ maleta }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  h2 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+
+  .section { margin-bottom: 40px; }
+
+  /* ── Info card ── */
+  .info-card {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1px;
+    background: #1f1f1f;
+    border: 1px solid #1f1f1f;
+    border-radius: 6px;
+    overflow: hidden;
+    max-width: 760px;
+    margin-bottom: 40px;
+  }
+
+  .info-item {
+    background: #161616;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .info-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #555;
+  }
+
+  .info-value {
+    font-size: 14px;
+    color: #e0e0e0;
+    font-weight: 500;
+  }
+
+  /* ── Table ── */
+  table {
+    width: 100%;
+    max-width: 760px;
+    border-collapse: collapse;
+  }
+
+  thead tr { border-bottom: 1px solid #2a2a2a; }
+
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #555;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #1e1e1e;
+    transition: background .12s;
+  }
+
+  tbody tr:hover { background: #1a1a1a; }
+
+  td { padding: 12px 14px; color: #ccc; }
+  td:first-child { color: #f0f0f0; font-weight: 500; }
+  tbody tr:hover td:first-child { color: #fff; }
+
+  .empty { padding: 40px 14px; color: #444; }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .badge-ok { background: #1a3a2a; color: #4caf82; }
+  .badge-pending { background: #3a2a1a; color: #c8883a; }
+
+  .btn-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #555;
+    text-decoration: none;
+    font-size: 13px;
+    margin-bottom: 28px;
+    transition: color .15s;
+  }
+
+  .btn-voltar:hover { color: #e0e0e0; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <a href="{% url 'sales:maletas_lista' %}" class="btn-voltar">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+    Voltar
+  </a>
+
+  <div class="section">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; max-width: 760px; margin-bottom: 20px;">
+      <div>
+        <h1>{{ maleta }}</h1>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <a href="{% url 'sales:atualizar_maleta' maleta.id %}" style="
+          display: inline-block;
+          padding: 8px 16px;
+          background: #fff;
+          color: #111;
+          text-decoration: none;
+          font-size: 13px;
+          font-weight: 600;
+          border-radius: 4px;
+        ">Atualizar</a>
+
+        <form method="post" action="{% url 'sales:deletar_maleta' maleta.id %}" onsubmit="return confirm('Tem certeza que deseja deletar {{ maleta }}?')">
+          {% csrf_token %}
+          <button type="submit" style="
+            display: inline-block;
+            padding: 8px 16px;
+            background: #c0392b;
+            color: #fff;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+          ">Deletar</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="info-item">
+        <span class="info-label">Número da ordem</span>
+        <span class="info-value">#{{ maleta.order_number }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Mês</span>
+        <span class="info-value">{{ maleta.get_month_display }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Início do período</span>
+        <span class="info-value">{{ maleta.start_sale_period|date:"d/m/Y" }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Fim do período</span>
+        <span class="info-value">{{ maleta.end_sale_period|date:"d/m/Y" }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Valor da ordem</span>
+        <span class="info-value">R$ {{ maleta.order_value }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Valor vendido</span>
+        <span class="info-value">R$ {{ maleta.value_sold }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Vendas vinculadas <span style="color:#555; font-weight:400;">{{ vendas|length }}</span></h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Valor íntegro</th>
+          <th>Desconto</th>
+          <th>Valor final</th>
+          <th>Pagamento</th>
+          <th>Parcelas</th>
+          <th>Situação</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for venda in vendas %}
+        <tr>
+          <td>{{ venda.client.full_name }}</td>
+          <td>{{ venda.sale_value }}</td>
+          <td>R$ {{ venda.discount }}</td>
+          <td>R$ {{ venda.end_value }}</td>
+          <td>{{ venda.get_payment_method_display }}</td>
+          <td>{{ venda.installments|default:"—" }}</td>
+          <td>
+            {% if venda.in_good_standing == 'Adimplente' %}
+              <span class="badge badge-ok">{{ venda.get_in_good_standing_display }}</span>
+            {% else %}
+              <span class="badge badge-pending">{{ venda.get_in_good_standing_display }}</span>
+            {% endif %}
+          </td>
+          <td>{{ venda.created_at|date:"d/m/Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="empty">Nenhuma venda vinculada a esta maleta.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}

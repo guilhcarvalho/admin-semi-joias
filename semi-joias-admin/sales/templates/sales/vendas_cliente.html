@@ -48,10 +48,47 @@
   tbody tr:hover td:first-child { color: #fff; }
 
   .empty { padding: 40px 14px; color: #444; }
+
+    .btn-submit {
+    margin-top: 8px;
+    padding: 10px 20px;
+    background: #fff;
+    color: #111;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: opacity .15s;
+  }
+
+  .btn-submit:hover { opacity: .85; }
+
+  .btn-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #555;
+    text-decoration: none;
+    font-size: 13px;
+    margin-bottom: 28px;
+    transition: color .15s;
+  }
+
+  .btn-voltar:hover { color: #e0e0e0; }
 </style>
 {% endblock %}
 
 {% block content %}
+  <a href="{% url 'clients:lista' %}" class="btn-voltar">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+    Voltar
+  </a>
+
   <div style="display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin-bottom: 28px;">
     <h1 style="margin-bottom: 0;">{{ cliente.full_name }} <span>{{ vendas|length }} no total</span></h1>
     <a href="{% url 'clients:atualizar' cliente.id %}" style="

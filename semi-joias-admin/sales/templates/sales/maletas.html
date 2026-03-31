@@ -54,7 +54,7 @@
 {% block content %}
   <div style="display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin-bottom: 28px;">
     <h1 style="margin-bottom: 0;">Maletas <span>{{ maletas|length }} no total</span></h1>
-    <a href="{% url 'sales:maletas_lista' %}" style="
+    <a href="{% url 'sales:cadastro_maleta' %}" style="
       display: inline-block;
       padding: 8px 16px;
       background: #fff;
@@ -85,13 +85,13 @@
     </thead>
     <tbody>
       {% for maleta in maletas %}
-      <tr>
+      <tr style="cursor: pointer;" onclick="window.location=' {% url 'sales:info_maleta' maleta.id %}'">
         <td>{{ maleta.order_number }}</td>
         <td>{{ maleta.order_value }}</td>
         <td>{{ maleta.value_sold }}</td>
-        <td>{{ maleta.month }}</td>
-        <td>{{ maleta.start_sale_period }}</td>
-        <td>{{ maleta.end_sale_period }}</td>
+        <td>{{ maleta.get_month_display }}</td>
+        <td>{{ maleta.start_sale_period|date:"d/m/Y" }}</td>
+        <td>{{ maleta.end_sale_period|date:"d/m/Y" }}</td>
       </tr>
       {% empty %}
       <tr>
