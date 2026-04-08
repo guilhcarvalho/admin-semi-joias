@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Carol Semijoias | Produtos em {{ maleta.order_number }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 28px;
+    color: #fff;
+  }
+
+  h1 span {
+    font-size: 13px;
+    font-weight: 400;
+    color: #555;
+    margin-left: 10px;
+  }
+
+  table {
+    width: 100%;
+    max-width: 760px;
+    border-collapse: collapse;
+  }
+
+  thead tr { border-bottom: 1px solid #2a2a2a; }
+
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #555;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #1e1e1e;
+    transition: background .12s;
+  }
+
+  tbody tr:hover { background: #1a1a1a; }
+
+  td { padding: 12px 14px; color: #ccc; }
+  td:first-child { color: #f0f0f0; font-weight: 500; }
+  tbody tr:hover td:first-child { color: #fff; }
+
+  .empty { padding: 40px 14px; color: #444; }
+
+    .btn-submit {
+    margin-top: 8px;
+    padding: 10px 20px;
+    background: #fff;
+    color: #111;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: opacity .15s;
+  }
+
+  .btn-submit:hover { opacity: .85; }
+
+  .btn-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #555;
+    text-decoration: none;
+    font-size: 13px;
+    margin-bottom: 28px;
+    transition: color .15s;
+  }
+
+  .btn-voltar:hover { color: #e0e0e0; }
+</style>
+{% endblock %}
+
+{% block content %}
+  <a href="{% url 'sales:info_maleta' maleta.id %}" class="btn-voltar">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+    Voltar
+  </a>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Código</th>
+        <th>valor</th>
+        <th>Quantidade</th>
+        <th>Quantidade vendida</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for produto in produtos %}
+      <tr>
+        <td>{{ produto.product_name }}</td>
+        <td>R$ {{ produto.product_code }}</td>
+        <td>{{ produto.product_value }}</td>
+        <td>{{ produto.product_quantity }}</td>
+        <td>{{ produto.quantity_sold }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="empty">Nenhum produto cadastrado nessa maleta.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

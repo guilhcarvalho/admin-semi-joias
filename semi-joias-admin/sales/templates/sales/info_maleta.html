@@ -123,38 +123,47 @@
   </a>
 
   <div class="section">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; max-width: 760px; margin-bottom: 20px;">
-      <div>
-        <h1>{{ maleta }}</h1>
-      </div>
-      <div style="display: flex; gap: 8px;">
-        <a href="{% url 'sales:atualizar_maleta' maleta.id %}" style="
-          display: inline-block;
+  <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+    <h1 style="margin: 0;">{{ maleta }}</h1>
+    <div style="display: flex; gap: 8px;">
+      <a href="{% url 'sales:maleta_produtos' maleta.id %}" style="
+        display: inline-block;
+        padding: 8px 16px;
+        background: #1a1a1a;
+        color: #ccc;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 4px;
+        border: 1px solid #2a2a2a;
+      ">Produtos</a>
+
+      <a href="{% url 'sales:atualizar_maleta' maleta.id %}" style="
+        display: inline-block;
+        padding: 8px 16px;
+        background: #fff;
+        color: #111;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 4px;
+      ">Atualizar</a>
+
+      <form method="post" action="{% url 'sales:deletar_maleta' maleta.id %}" onsubmit="return confirm('Tem certeza que deseja deletar {{ maleta }}?')">
+        {% csrf_token %}
+        <button type="submit" style="
           padding: 8px 16px;
-          background: #fff;
-          color: #111;
-          text-decoration: none;
+          background: #c0392b;
+          color: #fff;
+          border: none;
           font-size: 13px;
           font-weight: 600;
           border-radius: 4px;
-        ">Atualizar</a>
-
-        <form method="post" action="{% url 'sales:deletar_maleta' maleta.id %}" onsubmit="return confirm('Tem certeza que deseja deletar {{ maleta }}?')">
-          {% csrf_token %}
-          <button type="submit" style="
-            display: inline-block;
-            padding: 8px 16px;
-            background: #c0392b;
-            color: #fff;
-            border: none;
-            font-size: 13px;
-            font-weight: 600;
-            border-radius: 4px;
-            cursor: pointer;
-          ">Deletar</button>
-        </form>
-      </div>
+          cursor: pointer;
+        ">Deletar</button>
+      </form>
     </div>
+  </div>
 
     <div class="info-card">
       <div class="info-item">
