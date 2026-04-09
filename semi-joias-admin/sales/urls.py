@@ -16,4 +16,5 @@ urlpatterns = [
     path('info_maleta/produtos/<int:id>/', exibir_produtos, name='maleta_produtos'),
     path('info_maleta/produtos/atualizar/<int:id>/', atualizar_produto, name='maleta_produto_att'),
     path('info_maleta/produtos/deletar/<int:id>/', deletar_produto, name='maleta_produto_del'),
+    path('info_maleta/produtos/cadastrar/<int:id>', cadastrar_produto, name='maleta_produto_cadastro'),
 ]
