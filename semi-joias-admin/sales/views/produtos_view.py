@@ -3,21 +3,16 @@ from ..models import Produtos, Maleta
 
 def exibir_produtos(request, id):
     maleta = get_object_or_404(Maleta, id=id)
-    
-    produtos = Produtos.objects.filter(product_briefcase=maleta)
         
     product_briefcase = request.GET.get('product_briefcase', '').strip()
     product_name = request.GET.get('product_name', '').strip()
     product_code = request.GET.get('product_code', '').strip()
 
-    if product_briefcase:
-        produtos = produtos.filter(product_briefcase__icontains=product_briefcase)
-        
-    if product_name:
-        produtos = produtos.filter(product_name__icontains=product_name)
-        
-    if product_code:
-        produtos = produtos.filter(product_code__icontains=product_code)
+    produtos = Produtos.objects.filter(product_briefcase=maleta).param_filter(
+        product_briefcase=product_briefcase,
+        product_name=product_name,
+        product_code=product_code
+    )
     
     return render(request, 'sales/produtos.html',{
         'maleta': maleta,

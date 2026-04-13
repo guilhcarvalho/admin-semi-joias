@@ -1,11 +1,12 @@
 from django.db import models
 from .validator import name_validator, phone_validator
-
+from clients.services.models_filter import ClienteQuerySet
 
 class Cliente(models.Model):
     first_name = models.CharField(max_length=20, validators=[name_validator], blank=False, verbose_name="primeiro nome")
     last_name = models.CharField(max_length=30, validators=[name_validator], blank=False, verbose_name="sobrenome")
     phone_number = models.CharField(max_length=11, validators=[phone_validator], blank=False, verbose_name="número de telefone")
+    objects = ClienteQuerySet.as_manager()
     
     def save(self, *args, **kwargs):
         self.first_name = self.first_name.title()

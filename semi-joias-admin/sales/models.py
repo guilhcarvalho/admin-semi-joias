@@ -1,12 +1,12 @@
 from django.db import models
+from sales.services.models_filter import MaletaQuerySet, ProdutosQuerySet
 from clients.models import Cliente
 from django.core.validators import MinValueValidator
 from .choices import PAYMENT_METHODS, PAYMENT_SITUATION, MONTH_SELECTION
 from django.core.exceptions import ValidationError
 from decimal import Decimal
 from django.db.models import Sum
-
-
+    
 class Maleta(models.Model):
     month = models.CharField(max_length=20, choices=MONTH_SELECTION.choices, verbose_name="mês")
     start_sale_period = models.DateField(verbose_name="inicio do periodo de venda")
@@ -14,6 +14,7 @@ class Maleta(models.Model):
     order_number = models.PositiveIntegerField(unique=True, verbose_name="numero da ordem")
     order_value = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))], verbose_name="valor da ordem")
     value_sold = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"), validators=[MinValueValidator(Decimal("0.00"))], verbose_name="valor vendido")
+    objects = MaletaQuerySet.as_manager()
     
     def __str__(self):
         return f"Maleta {self.order_number}"
@@ -51,6 +52,7 @@ class Produtos(models.Model):
     product_value = models.DecimalField(max_digits=10, validators=[MinValueValidator(Decimal("0.00"))], decimal_places=2, verbose_name="valor do produto")
     product_quantity = models.PositiveIntegerField(verbose_name="quantidade")
     quantity_sold = models.PositiveIntegerField(default=0, verbose_name="quantidade vendida")
+    objects = ProdutosQuerySet.as_manager()
     
     def __str__(self):
         return f"{self.product_name} {self.product_code}"

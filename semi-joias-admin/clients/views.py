@@ -6,18 +6,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Cliente
 
-
 def exibir_clientes(request):
-    clientes = Cliente.objects.all()
-    
     nome = request.GET.get('nome', '').strip()
     celular = request.GET.get('celular', '').strip()
     
-    if nome:
-        clientes = clientes.filter(first_name__icontains=nome) | clientes.filter(last_name__icontains=nome)
-    
-    if celular:
-        clientes = clientes.filter(phone_number__icontains=celular)
+    clientes = Cliente.objects.param_filter(
+        nome=nome,
+        celular=celular
+    )
         
     return render(request, 'clients/clientes.html', {
         'clientes': clientes,

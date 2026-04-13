@@ -12,17 +12,14 @@ def info_maleta(request, id):
     })
 
 def exibir_maletas(request):
-    maletas = Maleta.objects.all()
-    
     month = request.GET.get('month', '').strip()
     order_number = request.GET.get('order', '').strip()
     
-    if month:
-        maletas = maletas.filter(month__icontains=month)
-        
-    if order_number:
-        maletas = maletas.filter(order_number__icontains=order_number)
-    
+    maletas = Maleta.objects.param_filter(
+        month=month, 
+        order_number=order_number
+    )
+
     return render(request, 'sales/maletas.html',{
         'maletas': maletas,
         'active': 'maletas',
