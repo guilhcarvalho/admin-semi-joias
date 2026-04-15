@@ -94,7 +94,11 @@
 
     <div class="field">
       <label for="month">Mês</label>
-      <input type="text" id="month" name="month" placeholder="Mês" required>
+      <select id="month" name="month" required style="background: #1a1a1a; border: 1px solid #2a2a2a; color: #e0e0e0; padding: 10px; border-radius: 4px;">
+        {% for value, text in form.fields.month.choices %}
+          <option value="{{ value }}">{{ text }}</option>
+        {% endfor %}
+      </select>
     </div>
 
     <div class="field">

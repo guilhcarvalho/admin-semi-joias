@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from ..models import Maleta
+from ..forms import MaletaForm
 
 def info_maleta(request, id):
     maleta = get_object_or_404(Maleta, id=id)
@@ -28,41 +29,30 @@ def exibir_maletas(request):
     })
     
 def cadastrar_maleta(request):
-    if request.method == "GET":
-        return render(request, 'sales/criar_maleta.html')
-    
-    elif request.method == "POST":
-        month = request.POST.get('month')
-        start_sale_period = request.POST.get('start_sale_period')
-        end_sale_period = request.POST.get('end_sale_period')
-        order_number = request.POST.get('order_number')
-        order_value = request.POST.get('order_value')
+    if request.method == "POST":
+        form = MaletaForm(request.POST)
         
-        briefcase = Maleta(
-            month=month,
-            start_sale_period=start_sale_period,
-            end_sale_period=end_sale_period,
-            order_number=order_number,
-            order_value=order_value,
-        )
-        briefcase.save()
-        return redirect('sales:maletas_lista')
+        if form.is_valid():
+            form.save()
+            return redirect('sales:maletas_lista')
+    else:
+        form = MaletaForm()
     
+    return render(request, 'sales/criar_maleta.html', {'form': form})
+
 def atualizar_maleta(request, id):
     maleta = get_object_or_404(Maleta, id=id)
     
-    if request.method == "GET":
-        return render(request, 'sales/criar_maleta.html', {'maleta': maleta})
-    
-    elif request.method == "POST":
-        maleta.month = request.POST.get('month')
-        maleta.start_sale_period = request.POST.get('start_sale_period')
-        maleta.end_sale_period = request.POST.get('end_sale_period')
-        maleta.order_number = request.POST.get('order_number')
-        maleta.order_value = request.POST.get('order_value')
+    if request.method == "POST":
+        form = MaletaForm(request.POST, instance=maleta)
+        if form.is_valid():
+            form.save()
+            return redirect('sales:maletas_lista')
         
-        maleta.save()
-        return redirect('sales:maletas_lista')
+    else:
+        form = MaletaForm(instance=maleta)
+
+    return render(request, 'sales/atualizar_maleta.html', {'form': form, 'maleta': maleta})
 
 def deletar_maleta(request, id):
     maleta = get_object_or_404(Maleta, id=id)

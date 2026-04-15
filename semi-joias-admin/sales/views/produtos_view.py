@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from ..models import Produtos, Maleta
+from ..forms import ProdutosForm
+from django.db import transaction
+
 
 def exibir_produtos(request, id):
     maleta = get_object_or_404(Maleta, id=id)
-        
+    
     product_briefcase = request.GET.get('product_briefcase', '').strip()
     product_name = request.GET.get('product_name', '').strip()
     product_code = request.GET.get('product_code', '').strip()
@@ -26,49 +29,34 @@ def cadastrar_produto(request, id):
     
     maleta = get_object_or_404(Maleta, id=id)
     
-    if request.method == "GET":
-        return render(request, 'sales/registrar_produto.html', {'maleta': maleta})
-    
-    elif request.method == "POST":
-        product_briefcase = maleta
-        product_name = request.POST.get('product_name')
-        product_code = request.POST.get('product_code')
-        product_value = request.POST.get('product_value')
-        product_quantity = request.POST.get('product_quantity')
+    if request.method == "POST":
+        form = ProdutosForm(request.POST)
         
-        produto = Produtos(
-            product_briefcase=product_briefcase,
-            product_name=product_name,
-            product_code=product_code,
-            product_value=product_value,
-            product_quantity=product_quantity,
-        )
-        produto.save()
-        return redirect('sales:maleta_produtos', id=id)
-
+        if form.is_valid():
+            produto = form.save(commit=False)
+            produto.product_briefcase = maleta
+            produto.save()
+            return redirect('sales:maleta_produtos', id=id)
+    else:
+        form = ProdutosForm()
+        
+    return render(request, 'sales/registrar_produto.html', {'maleta': maleta, 'form': form})
 
 def atualizar_produto(request, id):
     produto = get_object_or_404(Produtos, id=id)
     
     maleta = produto.product_briefcase
-    
-    if request.method == "GET":
-        contexto = {
-            'produto': produto,
-            'maleta': maleta
-        }
         
-        return render(request, 'sales/atualizar_produto.html', contexto)
-    
-    elif request.method == "POST":
-        produto.product_name = request.POST.get('product_name')
-        produto.product_code = request.POST.get('product_code')
-        produto.product_value = request.POST.get('product_value')
-        produto.product_quantity = request.POST.get('product_quantity')
+    if request.method == "POST":
+        form = ProdutosForm(request.POST, instance=produto)
+        if form.is_valid():
+            form.save()
+            return redirect('sales:maleta_produtos', id=maleta.id)
         
-        produto.save()
-        return redirect('sales:maleta_produtos', id=id)
-
+    else:
+        form = ProdutosForm(instance=produto)
+    return render(request, 'sales/atualizar_produto.html', {'produto': produto, 'maleta': maleta, 'form': form})
+    
 def deletar_produto(request, id):
     produto = get_object_or_404(Produtos, id=id)
     if request.method == "POST":
