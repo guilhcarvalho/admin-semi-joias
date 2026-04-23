@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Carol Semijoias | Vendas{% endblock %}
+
+{% block extra_css %}
+<style>
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 28px;
+    color: #fff;
+  }
+
+  h1 span {
+    font-size: 13px;
+    font-weight: 400;
+    color: #555;
+    margin-left: 10px;
+  }
+
+  table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead tr { border-bottom: 1px solid #2a2a2a; }
+
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #555;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #1e1e1e;
+    transition: background .12s;
+  }
+
+  tbody tr:hover { background: #1a1a1a; }
+
+    .badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .badge-ok { background: #1a3a2a; color: #4caf82; }
+  .badge-pending { background: #3a2a1a; color: #c8883a; }
+
+  td { padding: 12px 14px; color: #ccc; }
+  td:first-child { color: #f0f0f0; font-weight: 500; }
+  tbody tr:hover td:first-child { color: #fff; }
+
+  .empty { padding: 40px 14px; color: #444; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; max-width: 760px; margin-bottom: 28px;">
+  <h1 style="margin-bottom: 0;">Vendas<span>{{ vendas|length }} no total</span></h1>
+</div>
+
+<form method="get" style="display:flex; gap:12px; margin-bottom:28px;">
+    <input type="text" name="client" value="{{ client }}" placeholder="Cliente">
+    <input type="text" name="briefcase" value="{{ briefcase }}" placeholder="Maleta">
+    <button type="submit">Filtrar</button>
+</form>
+
+<table>
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Maleta</th>
+        <th>Valor</th>
+        <th>Pagamento</th>
+        <th>Situação</th>
+        <th>Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for venda in vendas %}
+      <tr>
+        <td>{{ venda.client }}</td>
+        <td>{{ venda.briefcase }}</td>
+        <td>R$ {{ venda.end_value }}</td>
+        <td>{{ venda.get_payment_method_display }}</td>
+        <td>
+            {% if venda.in_good_standing == 'Adimplente' %}
+              <span class="badge badge-ok">{{ venda.get_in_good_standing_display }}</span>
+            {% else %}
+              <span class="badge badge-pending">{{ venda.get_in_good_standing_display }}</span>
+            {% endif %}
+          </td>
+        <td>{{ venda.created_at|date:"d/m/Y" }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="empty">Nenhuma venda registrada.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
