@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.functions import Concat
+from django.db.models import Value
 
 class MaletaQuerySet(models.QuerySet):
     def param_filter(self, month=None, order_number=None):
@@ -19,4 +21,18 @@ class ProdutosQuerySet(models.QuerySet):
         if product_code:
             queryset = queryset.filter(product_code__icontains=product_code)
             
+        return queryset
+    
+class VendasQuerySet(models.QuerySet):
+    def param_filter(self, client=None, briefcase=None):
+        queryset = self
+        if client:
+            queryset = queryset.annotate(full_name=Concat(
+                'client__first_name',
+                Value(' '),
+                'client__last_name'
+                )).filter(full_name__icontains=client)
+            
+        if briefcase:
+            queryset = queryset.filter(briefcase__order_number__icontains=briefcase)
         return queryset

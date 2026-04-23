@@ -1,5 +1,5 @@
 from django import forms
-from .models import Maleta, Produtos
+from .models import Maleta, Produtos, Vendas
 
 class MaletaForm(forms.ModelForm):
     class Meta:
@@ -23,4 +23,18 @@ class ProdutosForm(forms.ModelForm):
             'product_code',
             'product_value',
             'product_quantity',
+        ]
+
+class VendasForm(forms.ModelForm):
+    class Meta:
+        model = Vendas
+        
+        fields = [
+            'client',
+            'sale_value',
+            'payment_method',
+            'installments',
+            'discount',
+            'end_value',
+            'in_good_standing',
         ]

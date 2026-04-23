@@ -1,5 +1,5 @@
 from django.db import models
-from sales.services.models_filter import MaletaQuerySet, ProdutosQuerySet
+from sales.services.models_filter import MaletaQuerySet, ProdutosQuerySet, VendasQuerySet
 from clients.models import Cliente
 from django.core.validators import MinValueValidator
 from .choices import PAYMENT_METHODS, PAYMENT_SITUATION, MONTH_SELECTION
@@ -76,11 +76,12 @@ class Vendas(models.Model):
     sale_value = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))], default=Decimal("0.00"), blank=True, verbose_name="valor integro da venda")
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS.choices, verbose_name="método de pagamento")
     installments = models.PositiveIntegerField(validators=[MinValueValidator(0)], blank=True, null=True, verbose_name="quantidade de parcelas")
-    discount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))], default=Decimal("0.00"), verbose_name="desconto")
-    end_value = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))], default=Decimal("0.00"), verbose_name="valor final da venda")
+    discount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))], default=Decimal("0.00"), blank=True, verbose_name="desconto")
+    end_value = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))], default=Decimal("0.00"), blank=True, verbose_name="valor final da venda")
     in_good_standing = models.CharField(max_length=20,choices=PAYMENT_SITUATION.choices, verbose_name="situação de pagamento")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="data da venda")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="atualização")
+    objects = VendasQuerySet.as_manager()
     
     def __str__(self):
         return f"{self.briefcase} / Cliente: {self.client}"
