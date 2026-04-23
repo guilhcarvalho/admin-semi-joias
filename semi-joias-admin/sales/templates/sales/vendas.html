@@ -86,7 +86,7 @@
     </thead>
     <tbody>
       {% for venda in vendas %}
-      <tr>
+      <tr style="cursor: pointer;" onclick="window.location=' {% url 'sales:info_vendas' venda.id %}'">
         <td>{{ venda.client }}</td>
         <td>{{ venda.briefcase }}</td>
         <td>R$ {{ venda.end_value }}</td>

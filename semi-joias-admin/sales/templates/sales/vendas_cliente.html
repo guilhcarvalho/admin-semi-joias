@@ -130,7 +130,7 @@
     </thead>
     <tbody>
       {% for venda in vendas %}
-      <tr>
+      <tr style="cursor: pointer;" onclick="window.location=' {% url 'sales:info_vendas' venda.id %}'">
         <td>{{ venda.briefcase }}</td>
         <td>R$ {{ venda.sale_value }}</td>
         <td>{{ venda.get_payment_method_display }}</td>
