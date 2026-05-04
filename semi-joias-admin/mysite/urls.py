@@ -17,11 +17,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("login", TemplateView.as_view(template_name="sales/login.html")),
+    path("accounts/", include("accounts.urls")),
+    path("", RedirectView.as_view(url="/accounts/login/"), name="home"),
     path('', include('clients.urls')),
     path('', include('sales.urls')),
 ]

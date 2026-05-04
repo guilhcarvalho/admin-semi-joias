@@ -116,9 +116,36 @@
         Vendas
       </a>
     </div>
+
+    <div style="margin-top: auto; padding: 20px 20px 0; border-top: 1px solid #1f1f1f;">
+      <p style="font-size: 12px; color: #555; margin-bottom: 8px;">{{ request.user.username }}</p>
+      <form method="post" action="{% url 'accounts:logout' %}" style="margin:0;">
+        {% csrf_token %}
+        <button type="submit" style="display:flex;align-items:center;gap:8px;padding:8px 0;color:#555;background:none;border:none;cursor:pointer;font-size:13px;transition:color .12s;width:100%;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          Sair
+        </button>
+      </form>
+    </div>
   </nav>
 
   <main class="main">
+    {% if messages %}
+      <div style="margin-bottom: 24px; display: flex; flex-direction: column; gap: 8px;">
+        {% for message in messages %}
+          <div style="padding: 12px 16px; border-radius: 4px; font-size: 13px;
+            {% if message.tags == 'error' %}
+              background: #3d0000; color: #ff8888; border: 1px solid #ff0000;
+            {% else %}
+              background: #1a3a2a; color: #4caf82; border: 1px solid #2a5a3a;
+            {% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
     {% block content %}{% endblock %}
   </main>
 
