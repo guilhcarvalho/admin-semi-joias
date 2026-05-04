@@ -12,15 +12,13 @@ class MaletaQuerySet(models.QuerySet):
         return queryset
     
 class ProdutosQuerySet(models.QuerySet):
-    def param_filter(self, product_briefcase=None, product_name=None, product_code=None):
+    def param_filter(self, product_name=None, product_code=None):
         queryset = self
-        if product_briefcase:
-            queryset = queryset.filter(product_briefcase__icontains=product_briefcase)
         if product_name:
             queryset = queryset.filter(product_name__icontains=product_name)
         if product_code:
             queryset = queryset.filter(product_code__icontains=product_code)
-            
+
         return queryset
     
 class VendasQuerySet(models.QuerySet):
