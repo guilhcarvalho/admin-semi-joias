@@ -2,7 +2,7 @@ from django.core.validators import RegexValidator
 
 
 name_validator = RegexValidator(
-    regex=r'^[a-zA-Z]+$',
+    regex=r'^[a-zA-ZÀ-ÿ]+$',
     message="Insira um nome válido."
 )
 

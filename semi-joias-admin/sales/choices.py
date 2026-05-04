@@ -1,37 +1,47 @@
 from django.db import models
 
-PAYMENT_METHODS = models.TextChoices(
-    "PAYMENT_METHODS",
-    [
-        ("pix", "Pix"),
-        ("debito", "Débito"),
-        ("credito", "Crédito"),
-        ("dinheiro", "Dinheiro")
-    ]
-)
 
-PAYMENT_SITUATION = models.TextChoices(
-    "PAYMENT_SITUATION",
-    [
-        ("adimplente", "Adimplente"),
-        ("inadimplente", "inadimplente")
-    ]
-)
+class PAYMENT_METHODS(models.TextChoices):
+    PIX      = 'pix',      'Pix'
+    DEBITO   = 'debito',   'Débito'
+    CREDITO  = 'credito',  'Crédito'
+    DINHEIRO = 'dinheiro', 'Dinheiro'
 
-MONTH_SELECTION = models.TextChoices(
-    "MONTH_SELECTION",
-    [
-        ("janeiro", "Janeiro"),
-        ("fevereiro", "Fevereiro"),
-        ("março", "Março"),
-        ("abril", "Abril"),
-        ("maio", "Maio"),
-        ("junho", "Junho"),
-        ("julho", "Julho"),
-        ("agosto", "Agosto"),
-        ("setembro", "Setembro"),
-        ("outubro", "Outubro"),
-        ("novembro", "Novembro"),
-        ("dezembro", "Dezembro")
-    ]
-)
+
+class PAYMENT_SITUATION(models.TextChoices):
+    ADIMPLENTE   = 'adimplente',   'Adimplente'
+    INADIMPLENTE = 'inadimplente', 'Inadimplente'
+
+
+class MONTH_SELECTION(models.TextChoices):
+    JANEIRO   = 'janeiro',   'Janeiro'
+    FEVEREIRO = 'fevereiro', 'Fevereiro'
+    MARCO     = 'março',     'Março'
+    ABRIL     = 'abril',     'Abril'
+    MAIO      = 'maio',      'Maio'
+    JUNHO     = 'junho',     'Junho'
+    JULHO     = 'julho',     'Julho'
+    AGOSTO    = 'agosto',    'Agosto'
+    SETEMBRO  = 'setembro',  'Setembro'
+    OUTUBRO   = 'outubro',   'Outubro'
+    NOVEMBRO  = 'novembro',  'Novembro'
+    DEZEMBRO  = 'dezembro',  'Dezembro'
+
+
+class SALE_STATUS(models.TextChoices):
+    ATIVA             = 'ativa',             'Ativa'
+    CANCELADA         = 'cancelada',         'Cancelada'
+    DEVOLVIDA_PARCIAL = 'devolvida_parcial', 'Devolução Parcial'
+
+
+class GARANTIA_STATUS(models.TextChoices):
+    ENVIADO    = 'enviado',    'Enviado'
+    EM_ANALISE = 'em_analise', 'Em Análise'
+    RESOLVIDO  = 'resolvido',  'Resolvido'
+    RECUSADO   = 'recusado',   'Recusado'
+
+
+class PARCELA_SITUACAO(models.TextChoices):
+    PENDENTE  = 'pendente',  'Pendente'
+    PAGO      = 'pago',      'Pago'
+    CANCELADA = 'cancelada', 'Cancelada'
