@@ -92,19 +92,35 @@
   <form method="post" class="form-wrap">
     {% csrf_token %}
 
+    {% if form.errors %}
+      <div style="background:#3d0000; color:#ff8888; padding:15px; border-radius:4px; font-size:13px; border:1px solid #ff0000;">
+        <strong>Verifique os erros:</strong>
+        <ul style="margin-top:8px; padding-left:16px;">
+          {% for field in form %}
+            {% for error in field.errors %}
+              <li>{{ field.label }}: {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
     <div class="field">
       <label for="first_name">Primeiro nome</label>
-      <input type="text" id="first_name" name="first_name" placeholder="Primeiro nome" required>
+      <input type="text" id="first_name" name="first_name" placeholder="Primeiro nome"
+             value="{{ form.first_name.value|default:'' }}" required>
     </div>
 
     <div class="field">
       <label for="last_name">Sobrenome</label>
-      <input type="text" id="last_name" name="last_name" placeholder="Sobrenome" required>
+      <input type="text" id="last_name" name="last_name" placeholder="Sobrenome"
+             value="{{ form.last_name.value|default:'' }}" required>
     </div>
 
     <div class="field">
       <label for="phone_number">Celular</label>
-      <input type="text" id="phone_number" name="phone_number" placeholder="Número de celular" maxlength="11" required>
+      <input type="text" id="phone_number" name="phone_number" placeholder="Número de celular"
+             maxlength="11" value="{{ form.phone_number.value|default:'' }}" required>
     </div>
 
     <button type="submit" class="btn-submit">Salvar</button>

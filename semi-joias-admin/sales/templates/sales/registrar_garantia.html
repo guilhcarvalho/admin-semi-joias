@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Carol Semijoias | Registrar Garantia{% endblock %}
+
+{% block extra_css %}
+<style>
+  h1 { font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 8px; }
+  h2 { font-size: 14px; font-weight: 600; color: #888; margin-bottom: 24px; }
+
+  .btn-voltar {
+    display: inline-flex; align-items: center; gap: 6px; color: #555;
+    text-decoration: none; font-size: 13px; margin-bottom: 28px; transition: color .15s;
+  }
+  .btn-voltar:hover { color: #e0e0e0; }
+
+  .form-wrap { max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  label {
+    font-size: 11px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: #555;
+  }
+
+  select, input[type="number"], textarea {
+    background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 4px;
+    color: #e0e0e0; font-size: 13px; padding: 10px 12px; outline: none;
+    font-family: 'Segoe UI', sans-serif; width: 100%;
+  }
+  select:focus, input[type="number"]:focus, textarea:focus { border-color: #555; }
+  textarea { resize: vertical; min-height: 80px; }
+</style>
+{% endblock %}
+
+{% block content %}
+  <a href="{% url 'sales:info_vendas' venda.id %}" class="btn-voltar">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+    Voltar
+  </a>
+
+  <h1>Registrar garantia</h1>
+  <h2>Venda #{{ venda.id }} — {{ venda.client.full_name }}</h2>
+
+  {% if messages %}
+  <div style="margin-bottom:20px;">
+    {% for msg in messages %}
+    <div style="background:#3d0000; color:#ff8888; padding:12px 16px; border-radius:4px; font-size:13px; border:1px solid #ff0000;">
+      {{ msg }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <form method="post" class="form-wrap">
+    {% csrf_token %}
+
+    <div class="field">
+      <label for="item_venda">Produto</label>
+      <select name="item_venda" id="item_venda">
+        {% for item in itens %}
+        <option value="{{ item.id }}">{{ item.product.product_name }} — {{ item.quantity }}x</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="quantidade">Quantidade</label>
+      <input type="number" name="quantidade" id="quantidade" min="1" value="1">
+    </div>
+
+    <div class="field">
+      <label for="motivo">Motivo</label>
+      <textarea name="motivo" id="motivo"></textarea>
+    </div>
+
+    <div style="display:flex; gap:12px;">
+      <button type="submit" style="
+        padding: 10px 20px; background: #fff; color: #111; border: none;
+        border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer;">
+        Registrar garantia
+      </button>
+      <a href="{% url 'sales:info_vendas' venda.id %}" style="
+        padding: 10px 20px; background: #1a1a1a; color: #888; text-decoration: none;
+        border-radius: 4px; font-size: 13px; font-weight: 600; border: 1px solid #2a2a2a;">
+        Cancelar
+      </a>
+    </div>
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('select').forEach(el => {
+        el.style.cssText = 'background:#1a1a1a;border:1px solid #2a2a2a;border-radius:4px;color:#e0e0e0;font-size:13px;padding:10px 12px;outline:none;width:100%;font-family:\'Segoe UI\',sans-serif;';
+      });
+    });
+  </script>
+{% endblock %}

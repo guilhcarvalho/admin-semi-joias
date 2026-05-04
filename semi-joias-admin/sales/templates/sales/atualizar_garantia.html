@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Carol Semijoias | Atualizar Garantia{% endblock %}
+
+{% block extra_css %}
+<style>
+  h1 { font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 8px; }
+  h2 { font-size: 14px; font-weight: 600; color: #888; margin-bottom: 24px; }
+
+  .btn-voltar {
+    display: inline-flex; align-items: center; gap: 6px; color: #555;
+    text-decoration: none; font-size: 13px; margin-bottom: 28px; transition: color .15s;
+  }
+  .btn-voltar:hover { color: #e0e0e0; }
+
+  .form-wrap { max-width: 360px; display: flex; flex-direction: column; gap: 20px; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  label {
+    font-size: 11px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: #555;
+  }
+
+  .readonly-value {
+    background: #111; border: 1px solid #1e1e1e; border-radius: 4px;
+    color: #666; font-size: 14px; padding: 10px 12px;
+  }
+
+  select {
+    background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 4px;
+    color: #e0e0e0; font-size: 13px; padding: 10px 12px; outline: none;
+    font-family: 'Segoe UI', sans-serif; width: 100%;
+  }
+  select:focus { border-color: #555; }
+</style>
+{% endblock %}
+
+{% block content %}
+  <a href="{% url 'sales:info_vendas' venda.id %}" class="btn-voltar">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+    Voltar
+  </a>
+
+  <h1>Atualizar garantia</h1>
+  <h2>{{ garantia.item_venda.product.product_name }} — Venda #{{ venda.id }}</h2>
+
+  <form method="post" class="form-wrap">
+    {% csrf_token %}
+
+    <div class="field">
+      <label>Produto</label>
+      <div class="readonly-value">{{ garantia.item_venda.product.product_name }}</div>
+    </div>
+
+    <div class="field">
+      <label>Quantidade</label>
+      <div class="readonly-value">{{ garantia.quantidade }}</div>
+    </div>
+
+    <div class="field">
+      <label>Motivo</label>
+      <div class="readonly-value">{{ garantia.motivo }}</div>
+    </div>
+
+    <div class="field">
+      <label for="id_status">Status</label>
+      {{ form.status }}
+    </div>
+
+    <div style="display:flex; gap:12px;">
+      <button type="submit" style="
+        padding: 10px 20px; background: #fff; color: #111; border: none;
+        border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer;">
+        Salvar
+      </button>
+      <a href="{% url 'sales:info_vendas' venda.id %}" style="
+        padding: 10px 20px; background: #1a1a1a; color: #888; text-decoration: none;
+        border-radius: 4px; font-size: 13px; font-weight: 600; border: 1px solid #2a2a2a;">
+        Cancelar
+      </a>
+    </div>
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('select').forEach(el => {
+        el.style.cssText = 'background:#1a1a1a;border:1px solid #2a2a2a;border-radius:4px;color:#e0e0e0;font-size:13px;padding:10px 12px;outline:none;width:100%;font-family:\'Segoe UI\',sans-serif;';
+      });
+    });
+  </script>
+{% endblock %}

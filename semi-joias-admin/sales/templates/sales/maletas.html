@@ -85,7 +85,7 @@
     </thead>
     <tbody>
       {% for maleta in maletas %}
-      <tr style="cursor: pointer;" onclick="window.location=' {% url 'sales:info_maleta' maleta.id %}'">
+      <tr style="cursor: pointer;" onclick="window.location='{% url 'sales:info_maleta' maleta.id %}'">
         <td>{{ maleta.order_number }}</td>
         <td>{{ maleta.order_value }}</td>
         <td>{{ maleta.value_sold }}</td>

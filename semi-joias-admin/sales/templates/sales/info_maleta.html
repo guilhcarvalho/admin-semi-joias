@@ -222,7 +222,7 @@
       </thead>
       <tbody>
         {% for venda in vendas %}
-        <tr style="cursor: pointer;" onclick="window.location=' {% url 'sales:info_vendas' venda.id %}'">
+        <tr style="cursor: pointer;" onclick="window.location='{% url 'sales:info_vendas' venda.id %}'">
           <td>{{ venda.client.full_name }}</td>
           <td>{{ venda.sale_value }}</td>
           <td>R$ {{ venda.discount }}</td>
@@ -230,7 +230,7 @@
           <td>{{ venda.get_payment_method_display }}</td>
           <td>{{ venda.installments|default:"—" }}</td>
           <td>
-            {% if venda.in_good_standing == 'Adimplente' %}
+            {% if venda.in_good_standing == 'adimplente' %}
               <span class="badge badge-ok">{{ venda.get_in_good_standing_display }}</span>
             {% else %}
               <span class="badge badge-pending">{{ venda.get_in_good_standing_display }}</span>

@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Carol Semijoias | Nova venda — Itens{% endblock %}
+
+{% block extra_css %}
+<style>
+  h1 { font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+  h2 { font-size: 13px; font-weight: 600; color: #888; margin-bottom: 16px; text-transform: uppercase; letter-spacing: .08em; }
+
+  .steps {
+    display: flex;
+    gap: 0;
+    margin-bottom: 36px;
+    border: 1px solid #2a2a2a;
+    border-radius: 6px;
+    overflow: hidden;
+    max-width: 480px;
+  }
+  .step {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    color: #555;
+    background: #161616;
+    border-right: 1px solid #2a2a2a;
+  }
+  .step:last-child { border-right: none; }
+  .step.active { background: #fff; color: #111; }
+
+  .layout { display: flex; gap: 40px; align-items: flex-start; }
+  .col-form { flex: 0 0 340px; }
+  .col-list { flex: 1; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  label { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #555; }
+
+  input, select {
+    background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 4px;
+    color: #e0e0e0; font-family: 'Segoe UI', sans-serif; font-size: 13px;
+    padding: 9px 10px; outline: none; transition: border-color .15s; width: 100%;
+  }
+  input:focus, select:focus { border-color: #555; }
+
+  .btn-add {
+    padding: 9px 18px; background: #fff; color: #111; border: none;
+    border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: opacity .15s; width: 100%; margin-top: 4px;
+  }
+  .btn-add:hover { opacity: .85; }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { border-bottom: 1px solid #2a2a2a; }
+  th { text-align: left; padding: 8px 12px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #555; }
+  tbody tr { border-bottom: 1px solid #1e1e1e; }
+  td { padding: 10px 12px; color: #ccc; font-size: 13px; }
+  td:first-child { color: #f0f0f0; font-weight: 500; }
+  .empty { padding: 32px 12px; color: #444; }
+
+  .btn-remove {
+    padding: 4px 10px; background: #3a1010; color: #e07070;
+    border: 1px solid #5a2020; font-size: 12px; font-weight: 600;
+    border-radius: 4px; cursor: pointer;
+  }
+
+  .actions { display: flex; gap: 10px; margin-top: 32px; }
+  .btn-next {
+    padding: 10px 24px; background: #fff; color: #111; border: none;
+    border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: opacity .15s;
+  }
+  .btn-next:hover { opacity: .85; }
+  .btn-cancel {
+    padding: 10px 20px; background: transparent; color: #555;
+    border: 1px solid #2a2a2a; border-radius: 4px; font-size: 13px;
+    font-weight: 600; cursor: pointer; transition: color .15s;
+  }
+  .btn-cancel:hover { color: #ccc; }
+</style>
+{% endblock %}
+
+{% block content %}
+  <h1>Nova venda — {{ maleta }}</h1>
+
+  <div class="steps">
+    <div class="step active">1. Itens</div>
+    <div class="step">2. Verificação</div>
+    <div class="step">3. Dados</div>
+  </div>
+
+  <div class="layout">
+    <div class="col-form">
+      <h2>Adicionar item</h2>
+      {% if not produtos %}
+        <p style="color:#444; font-size:13px;">Nenhum produto cadastrado nesta maleta.</p>
+      {% else %}
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="add">
+
+        <div class="field">
+          <label>Produto</label>
+          <select name="product">
+            {% for produto in produtos %}
+              <option value="{{ produto.id }}">
+                {{ produto.product_name }} #{{ produto.product_code }} — {{ produto.remaining_quantity }} disp.
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Quantidade</label>
+          <input type="number" name="quantity" min="1" value="1">
+        </div>
+
+        <div class="field">
+          <label>Desconto %</label>
+          <input type="number" name="discount_percent" min="0" max="100" step="0.01" value="0">
+        </div>
+
+        <div class="field">
+          <label>Desconto R$</label>
+          <input type="number" name="integer_discount" min="0" step="0.01" value="0">
+        </div>
+
+        <button type="submit" class="btn-add">+ Adicionar</button>
+      </form>
+      {% endif %}
+    </div>
+
+    <div class="col-list">
+      <h2>Itens adicionados <span style="color:#666;">{{ itens|length }}</span></h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Qtd</th>
+            <th>Preço unit.</th>
+            <th>Desc %</th>
+            <th>Desc R$</th>
+            <th>Valor unit.</th>
+            <th>Subtotal</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in itens %}
+          <tr>
+            <td>{{ item.produto.product_name }} <span style="color:#555;">#{{ item.produto.product_code }}</span></td>
+            <td>{{ item.quantity }}</td>
+            <td>R$ {{ item.unit_price }}</td>
+            <td>{% if item.discount_percent %}{{ item.discount_percent }}%{% else %}<span style="color:#444;">—</span>{% endif %}</td>
+            <td>{% if item.integer_discount %}R$ {{ item.integer_discount }}{% else %}<span style="color:#444;">—</span>{% endif %}</td>
+            <td>R$ {{ item.end_value }}</td>
+            <td style="font-weight:600; color:#e0e0e0;">R$ {{ item.subtotal }}</td>
+            <td>
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="remove">
+                <input type="hidden" name="product_id" value="{{ item.product_id }}">
+                <button type="submit" class="btn-remove">Remover</button>
+              </form>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="8" class="empty">Nenhum item adicionado ainda.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="actions">
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="next">
+          <button type="submit" class="btn-next">Prosseguir →</button>
+        </form>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="cancelar">
+          <button type="submit" class="btn-cancel">Cancelar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

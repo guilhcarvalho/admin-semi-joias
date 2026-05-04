@@ -18,12 +18,11 @@
     gap: 20px;
   }
 
-  /* Container para o autocomplete e campos normais */
   .field {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    position: relative; /* Necessário para prender a caixa de resultados */
+    position: relative;
   }
 
   label {
@@ -50,14 +49,13 @@
   input:focus, select:focus { border-color: #555; }
   input::placeholder { color: #3a3a3a; }
 
-  /* Estilização da Caixa de Resultados (Autocomplete) */
   #client_results {
     position: absolute;
     top: 100%;
     left: 0;
     width: 100%;
     z-index: 1000;
-    background: #222; /* Fundo um pouco mais claro que o input */
+    background: #222;
     border: 1px solid #333;
     border-radius: 0 0 4px 4px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.4);
@@ -77,10 +75,13 @@
   }
 
   .client-option:last-child { border-bottom: none; }
+  .client-option:hover { background-color: #333; color: #fff; }
 
-  .client-option:hover {
-    background-color: #333;
-    color: #fff;
+  #selection_feedback {
+    font-size: 12px;
+    color: #4caf50;
+    font-weight: 500;
+    margin-top: 2px;
   }
 
   .btn-submit {
@@ -112,13 +113,6 @@
   }
 
   .btn-voltar:hover { color: #e0e0e0; }
-
-  #selection_feedback {
-    font-size: 12px;
-    color: #4caf50;
-    font-weight: 500;
-    margin-top: 2px;
-  }
 </style>
 {% endblock %}
 
@@ -136,9 +130,9 @@
     {% csrf_token %}
 
     {% if form.errors %}
-      <div style="background: #3d0000; color: #ff8888; padding: 15px; border-radius: 4px; margin-bottom: 20px; font-size: 13px; border: 1px solid #ff0000;">
-        <strong>Opa! Verifique os seguintes erros:</strong>
-        <ul>
+      <div style="background:#3d0000; color:#ff8888; padding:15px; border-radius:4px; font-size:13px; border:1px solid #ff0000;">
+        <strong>Verifique os erros:</strong>
+        <ul style="margin-top:8px; padding-left:16px;">
           {% for field, errors in form.errors.items %}
             <li>{{ field }}: {{ errors|striptags }}</li>
           {% endfor %}
@@ -149,13 +143,11 @@
     <div class="field">
       <label>Cliente</label>
       <input type="text" id="client_search" placeholder="Digite o nome para buscar..." autocomplete="off">
-      
       <input type="hidden" name="client" id="selected_client_id" required>
-
       <div id="client_results">
         {% for cliente in form.fields.client.queryset %}
-          <div class="client-option" 
-               data-id="{{ cliente.id }}" 
+          <div class="client-option"
+               data-id="{{ cliente.id }}"
                data-name="{{ cliente.first_name }} {{ cliente.last_name }}">
             {{ cliente.first_name }} {{ cliente.last_name }}
           </div>
@@ -175,7 +167,7 @@
 
     <div class="field">
       <label for="installments">Parcelas</label>
-      <input type="number" id="installments" name="installments" placeholder="Quantidade..." required>
+      <input type="number" id="installments" name="installments" placeholder="Quantidade...">
     </div>
 
     <div class="field">
@@ -191,50 +183,40 @@
   </form>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const searchInput = document.getElementById('client_search');
-      const resultsBox = document.getElementById('client_results');
-      const options = document.querySelectorAll('.client-option');
+      const resultsBox  = document.getElementById('client_results');
+      const options     = document.querySelectorAll('.client-option');
       const hiddenInput = document.getElementById('selected_client_id');
-      const feedback = document.getElementById('selection_feedback');
+      const feedback    = document.getElementById('selection_feedback');
 
-      searchInput.addEventListener('input', function() {
-        const term = searchInput.value.toLowerCase();
-
+      searchInput.addEventListener('input', function () {
+        const term = this.value.toLowerCase();
         if (term.length > 0) {
-          resultsBox.style.display = 'block';
           let hasAny = false;
           options.forEach(opt => {
-            const name = opt.getAttribute('data-name').toLowerCase();
-            if (name.includes(term)) {
-              opt.style.display = 'block';
-              hasAny = true;
-            } else {
-              opt.style.display = 'none';
-            }
+            const match = opt.dataset.name.toLowerCase().includes(term);
+            opt.style.display = match ? 'block' : 'none';
+            if (match) hasAny = true;
           });
-          if(!hasAny) resultsBox.style.display = 'none';
+          resultsBox.style.display = hasAny ? 'block' : 'none';
         } else {
           resultsBox.style.display = 'none';
         }
       });
 
       options.forEach(opt => {
-        opt.addEventListener('click', function() {
-          const id = opt.getAttribute('data-id');
-          const name = opt.getAttribute('data-name');
-
-          hiddenInput.value = id; 
-          searchInput.value = name;
-          feedback.innerText = "✓ " + name + " selecionado";
+        opt.addEventListener('click', function () {
+          hiddenInput.value  = this.dataset.id;
+          searchInput.value  = this.dataset.name;
+          feedback.innerText = '✓ ' + this.dataset.name + ' selecionado';
           resultsBox.style.display = 'none';
         });
       });
 
-      document.addEventListener('click', function(e) {
-        if (!resultsBox.contains(e.target) && e.target !== searchInput) {
+      document.addEventListener('click', function (e) {
+        if (!resultsBox.contains(e.target) && e.target !== searchInput)
           resultsBox.style.display = 'none';
-        }
       });
     });
   </script>

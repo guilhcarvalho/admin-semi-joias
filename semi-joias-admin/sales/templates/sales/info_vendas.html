@@ -4,19 +4,8 @@
 
 {% block extra_css %}
 <style>
-  h1 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #fff;
-    margin-bottom: 4px;
-  }
-
-  h2 {
-    font-size: 15px;
-    font-weight: 600;
-    color: #fff;
-    margin-bottom: 16px;
-  }
+  h1 { font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+  h2 { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 16px; }
 
   .section { margin-bottom: 40px; }
 
@@ -48,141 +37,88 @@
     color: #555;
   }
 
-  .info-value {
-    font-size: 14px;
-    color: #e0e0e0;
-    font-weight: 500;
-  }
+  .info-value { font-size: 14px; color: #e0e0e0; font-weight: 500; }
 
-  table {
-    width: 100%;
-    max-width: 100%;
-    border-collapse: collapse;
-  }
-
+  table { width: 100%; max-width: 100%; border-collapse: collapse; }
   thead tr { border-bottom: 1px solid #2a2a2a; }
-
   th {
-    text-align: left;
-    padding: 10px 14px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: #555;
+    text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase; color: #555;
   }
-
-  tbody tr {
-    border-bottom: 1px solid #1e1e1e;
-    transition: background .12s;
-  }
-
+  tbody tr { border-bottom: 1px solid #1e1e1e; transition: background .12s; }
   tbody tr:hover { background: #1a1a1a; }
-
   td { padding: 12px 14px; color: #ccc; }
   td:first-child { color: #f0f0f0; font-weight: 500; }
   tbody tr:hover td:first-child { color: #fff; }
-
   .empty { padding: 40px 14px; color: #444; }
 
   .badge {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
+    display: inline-block; padding: 3px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 600;
   }
-
-  .badge-ok { background: #1a3a2a; color: #4caf82; }
-  .badge-pending { background: #3a2a1a; color: #c8883a; }
+  .badge-ok       { background: #1a3a2a; color: #4caf82; }
+  .badge-pending  { background: #3a2a1a; color: #c8883a; }
+  .badge-error    { background: #3a1010; color: #e07070; }
+  .badge-info     { background: #1a2a3a; color: #4a9fd4; }
 
   .btn-voltar {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: #555;
-    text-decoration: none;
-    font-size: 13px;
-    margin-bottom: 28px;
-    transition: color .15s;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 6px 14px; background-color: #333; color: #ffffff;
+    text-decoration: none; border-radius: 4px; font-size: 0.85rem;
+    font-weight: 500; border: 1px solid #444; transition: all 0.2s ease;
   }
-
-  .btn-voltar {
-    display: block;
-    width: fit-content;
-    margin-bottom: 8px;
-}
-
-.btn-voltar {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 14px;
-    background-color: #333;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    border: 1px solid #444;
-    transition: all 0.2s ease;
-}
-
-.btn-voltar:hover {
-    background-color: #444;
-    color: #fff;
-}
-
-.btn-voltar svg {
-    flex-shrink: 0;
-}
-
+  .btn-voltar:hover { background-color: #444; color: #fff; }
 </style>
 {% endblock %}
 
 {% block content %}
 
-    <div style="display: flex; flex-direction: row; gap: 12px; margin-bottom: 20px;">
-    <a href="{% url 'sales:vendas' %}" class="btn-voltar">
-        Vendas
-    </a>
-
+  <div style="display: flex; flex-direction: row; gap: 12px; margin-bottom: 20px;">
+    <a href="{% url 'sales:vendas' %}" class="btn-voltar">Vendas</a>
     {% if maleta %}
-    <a href="{% url 'sales:info_maleta' maleta.id %}" class="btn-voltar">
-        Detalhes da maleta
-    </a>
+    <a href="{% url 'sales:info_maleta' maleta.id %}" class="btn-voltar">Detalhes da maleta</a>
     {% endif %}
-    </div>
+  </div>
 
   <div class="section">
     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
       <h1 style="margin: 0;">Venda #{{ venda.id }}</h1>
-      <div style="display: flex; gap: 8px;">
 
-        <a href="{% url 'sales:atualizar_venda' venda.id %}" style="
-          display: inline-block;
-          padding: 8px 16px;
-          background: #fff;
-          color: #111;
-          text-decoration: none;
-          font-size: 13px;
-          font-weight: 600;
-          border-radius: 4px;
-        ">Atualizar</a>
+      {% if venda.status == 'ativa' %}
+        <span class="badge badge-ok">Ativa</span>
+      {% elif venda.status == 'cancelada' %}
+        <span class="badge badge-error">Cancelada</span>
+      {% elif venda.status == 'devolvida_parcial' %}
+        <span class="badge badge-pending">Devolução Parcial</span>
+      {% endif %}
 
-        <form method="post" action="{% url 'sales:deletar_venda' venda.id %}" onsubmit="return confirm('Tem certeza que deseja deletar a venda de {{ venda.client.full_name }}?')">
-          {% csrf_token %}
-          <button type="submit" style="
-            padding: 8px 16px;
-            background: #c0392b;
-            color: #fff;
-            border: none;
-            font-size: 13px;
-            font-weight: 600;
-            border-radius: 4px;
-            cursor: pointer;
-          ">Deletar</button>
-        </form>
+      <div style="display: flex; gap: 8px; margin-left: auto;">
+        {% if venda.status != 'cancelada' %}
+          <a href="{% url 'sales:atualizar_venda' venda.id %}" style="
+            display: inline-block; padding: 8px 16px; background: #fff; color: #111;
+            text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 4px;">
+            Atualizar
+          </a>
+          <a href="{% url 'sales:registrar_devolucao' venda.id %}" style="
+            display: inline-block; padding: 8px 16px; background: #1a2a3a; color: #4a9fd4;
+            text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 4px; border: 1px solid #2a4a6a;">
+            Devolução
+          </a>
+          <a href="{% url 'sales:registrar_garantia' venda.id %}" style="
+            display: inline-block; padding: 8px 16px; background: #1a1a3a; color: #8888dd;
+            text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 4px; border: 1px solid #3a3a6a;">
+            Garantia
+          </a>
+          <form method="post" action="{% url 'sales:cancelar_venda' venda.id %}"
+                onsubmit="return confirm('Cancelar a venda de {{ venda.client.full_name }}? Esta ação não pode ser desfeita.')">
+            {% csrf_token %}
+            <button type="submit" style="
+              padding: 8px 16px; background: #3a1010; color: #e07070; border: 1px solid #5a2020;
+              font-size: 13px; font-weight: 600; border-radius: 4px; cursor: pointer;">
+              Cancelar venda
+            </button>
+          </form>
+        {% endif %}
       </div>
     </div>
 
@@ -199,10 +135,12 @@
         <span class="info-label">Método de pagamento</span>
         <span class="info-value">{{ venda.get_payment_method_display }}</span>
       </div>
+      {% if venda.installments %}
       <div class="info-item">
         <span class="info-label">Parcelas</span>
-        <span class="info-value">{{ venda.installments|default:"—" }}</span>
+        <span class="info-value">{{ venda.installments }}x</span>
       </div>
+      {% endif %}
       <div class="info-item">
         <span class="info-label">Valor íntegro</span>
         <span class="info-value">R$ {{ venda.sale_value }}</span>
@@ -218,7 +156,7 @@
       <div class="info-item">
         <span class="info-label">Situação</span>
         <span class="info-value">
-          {% if venda.in_good_standing == 'Adimplente' %}
+          {% if venda.in_good_standing == 'adimplente' %}
             <span class="badge badge-ok">{{ venda.get_in_good_standing_display }}</span>
           {% else %}
             <span class="badge badge-pending">{{ venda.get_in_good_standing_display }}</span>
@@ -236,39 +174,173 @@
     </div>
   </div>
 
+  {% with parcelas=venda.parcelas.all %}
+  {% if parcelas and venda.payment_method != 'credito' %}
   <div class="section">
-    <h2>Itens da venda <span style="color:#555; font-weight:400;">{{ venda.itens.count }}</span></h2>
-
+    <h2>Parcelas <span style="color:#555; font-weight:400;">{{ parcelas|length }}</span></h2>
     <table>
       <thead>
         <tr>
-          <th>Produto</th>
-          <th>Quantidade</th>
-          <th>Preço unitário</th>
-          <th>Desconto %</th>
-          <th>Desconto R$</th>
-          <th>Valor final</th>
-          <th>Subtotal</th>
+          <th>#</th>
+          <th>Valor</th>
+          <th>Situação</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        {% for item in venda.itens.all %}
+        {% for parcela in parcelas %}
         <tr>
-          <td>{{ item.product }}</td>
-          <td>{{ item.quantity }}</td>
-          <td>R$ {{ item.unit_price }}</td>
-          <td>{{ item.discount_percent }}%</td>
-          <td>R$ {{ item.integer_discount }}</td>
-          <td>R$ {{ item.end_value }}</td>
-          <td>R$ {{ item.subtotal }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="7" class="empty">Nenhum item vinculado a esta venda.</td>
+          <td>{{ parcela.numero }}/{{ venda.installments }}</td>
+          <td>R$ {{ parcela.valor }}</td>
+          <td>
+            {% if parcela.situacao == 'pago' %}
+              <span class="badge badge-ok">Pago</span>
+            {% elif parcela.situacao == 'cancelada' %}
+              <span class="badge badge-error">Cancelada</span>
+            {% else %}
+              <span class="badge badge-pending">Pendente</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if parcela.situacao != 'cancelada' %}
+            <form method="post" action="{% url 'sales:toggle_parcela' parcela.id %}">
+              {% csrf_token %}
+              <button type="submit" style="
+                padding:4px 12px; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid;
+                {% if parcela.situacao == 'pago' %}
+                  background:#3a1010; color:#e07070; border-color:#5a2020;
+                {% else %}
+                  background:#1a3a2a; color:#4caf82; border-color:#2a5a3a;
+                {% endif %}
+              ">
+                {% if parcela.situacao == 'pago' %}Marcar pendente{% else %}Marcar pago{% endif %}
+              </button>
+            </form>
+            {% endif %}
+          </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
+  {% endif %}
+  {% endwith %}
+
+  <div class="section">
+    <h2>Itens da venda <span style="color:#555; font-weight:400;">{{ items_data|length }}</span></h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Código</th>
+          <th>Qtd</th>
+          <th>Preço unitário</th>
+          <th>Desc %</th>
+          <th>Desc R$</th>
+          <th>Valor unit. c/ desc</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in items_data %}
+        <tr>
+          <td>{{ row.item.product.product_name }}</td>
+          <td style="color:#666;">{{ row.item.product.product_code }}</td>
+          <td>{{ row.item.quantity }}</td>
+          <td>R$ {{ row.item.unit_price }}</td>
+          <td>{% if row.item.discount_percent %}{{ row.item.discount_percent }}%{% else %}<span style="color:#444;">—</span>{% endif %}</td>
+          <td>{% if row.item.integer_discount %}R$ {{ row.item.integer_discount }}{% else %}<span style="color:#444;">—</span>{% endif %}</td>
+          <td>R$ {{ row.item.end_value }}</td>
+          <td style="color:#e0e0e0; font-weight:600;">R$ {{ row.subtotal }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8" class="empty">Nenhum item vinculado a esta venda.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if devolucoes %}
+  <div class="section">
+    <h2>Devoluções <span style="color:#555; font-weight:400;">{{ devolucoes|length }}</span></h2>
+    {% for dev in devolucoes %}
+    <div style="background:#161616; border:1px solid #1f1f1f; border-radius:6px; padding:16px 20px; margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-size:13px; color:#888;">{{ dev.created_at|date:"d/m/Y" }}</span>
+        <span style="font-size:13px; font-weight:600; color:#e0e0e0;">Estorno: R$ {{ dev.valor_total }}</span>
+      </div>
+      {% if dev.motivo %}
+      <p style="font-size:13px; color:#666; margin:0 0 10px;">{{ dev.motivo }}</p>
+      {% endif %}
+      <table>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Qtd devolvida</th>
+            <th>Valor estornado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in dev.itens.all %}
+          <tr>
+            <td>{{ item.item_venda.product.product_name }}</td>
+            <td>{{ item.quantidade }}</td>
+            <td>R$ {{ item.valor_estornado }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if garantias %}
+  <div class="section">
+    <h2>Garantias <span style="color:#555; font-weight:400;">{{ garantias|length }}</span></h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Qtd</th>
+          <th>Motivo</th>
+          <th>Status</th>
+          <th>Data</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for g in garantias %}
+        <tr>
+          <td>{{ g.item_venda.product.product_name }}</td>
+          <td>{{ g.quantidade }}</td>
+          <td style="color:#888;">{{ g.motivo }}</td>
+          <td>
+            {% if g.status == 'enviado' %}
+              <span class="badge badge-pending">Enviado</span>
+            {% elif g.status == 'em_analise' %}
+              <span class="badge badge-info">Em Análise</span>
+            {% elif g.status == 'resolvido' %}
+              <span class="badge badge-ok">Resolvido</span>
+            {% elif g.status == 'recusado' %}
+              <span class="badge badge-error">Recusado</span>
+            {% endif %}
+          </td>
+          <td style="color:#666;">{{ g.created_at|date:"d/m/Y" }}</td>
+          <td>
+            <a href="{% url 'sales:atualizar_garantia' g.id %}" style="
+              padding:4px 10px; background:#1a1a1a; color:#ccc; text-decoration:none;
+              font-size:12px; font-weight:600; border-radius:4px; border:1px solid #2a2a2a;">
+              Atualizar
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
 
 {% endblock %}

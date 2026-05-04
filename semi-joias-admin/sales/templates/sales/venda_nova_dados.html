@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Carol Semijoias | Nova venda — Dados{% endblock %}
+
+{% block extra_css %}
+<style>
+  h1 { font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+
+  .steps {
+    display: flex;
+    gap: 0;
+    margin-bottom: 36px;
+    border: 1px solid #2a2a2a;
+    border-radius: 6px;
+    overflow: hidden;
+    max-width: 480px;
+  }
+  .step {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    color: #555;
+    background: #161616;
+    border-right: 1px solid #2a2a2a;
+  }
+  .step:last-child { border-right: none; }
+  .step.active { background: #fff; color: #111; }
+
+  .form-wrap { max-width: 400px; display: flex; flex-direction: column; gap: 20px; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; position: relative; }
+  label { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #555; }
+
+  input, select {
+    background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 4px;
+    color: #e0e0e0; font-family: 'Segoe UI', sans-serif; font-size: 14px;
+    padding: 10px 12px; outline: none; transition: border-color .15s; width: 100%;
+  }
+  input:focus, select:focus { border-color: #555; }
+  input::placeholder { color: #3a3a3a; }
+
+  #client_results {
+    position: absolute; top: 100%; left: 0; width: 100%; z-index: 1000;
+    background: #222; border: 1px solid #333; border-radius: 0 0 4px 4px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4); max-height: 200px; overflow-y: auto;
+    display: none; margin-top: 2px;
+  }
+  .client-option {
+    padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #2a2a2a;
+    transition: background 0.2s; color: #e0e0e0; font-size: 14px;
+  }
+  .client-option:last-child { border-bottom: none; }
+  .client-option:hover { background-color: #333; color: #fff; }
+
+  #selection_feedback { font-size: 12px; color: #4caf50; font-weight: 500; margin-top: 2px; }
+
+  .btn-submit {
+    margin-top: 8px; padding: 10px 20px; background: #fff; color: #111; border: none;
+    border-radius: 4px; font-family: 'Segoe UI', sans-serif; font-size: 13px;
+    font-weight: 600; cursor: pointer; align-self: flex-start; transition: opacity .15s;
+  }
+  .btn-submit:hover { opacity: .85; }
+
+  .btn-back {
+    display: inline-flex; align-items: center; gap: 6px; color: #555;
+    text-decoration: none; font-size: 13px; margin-bottom: 28px; transition: color .15s;
+  }
+  .btn-back:hover { color: #e0e0e0; }
+</style>
+{% endblock %}
+
+{% block content %}
+  <h1>Nova venda — {{ maleta }}</h1>
+
+  <div class="steps">
+    <div class="step">1. Itens</div>
+    <div class="step">2. Verificação</div>
+    <div class="step active">3. Dados</div>
+  </div>
+
+  <a href="{% url 'sales:nova_venda_verificar' maleta.id %}" class="btn-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+    Voltar
+  </a>
+
+  <form method="post" class="form-wrap">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div style="background:#3d0000; color:#ff8888; padding:15px; border-radius:4px; font-size:13px; border:1px solid #ff0000;">
+        <strong>Erro:</strong>
+        <ul style="margin-top:8px; padding-left:16px;">
+          {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <div class="field">
+      <label>Cliente</label>
+      <input type="text" id="client_search" placeholder="Digite o nome para buscar..." autocomplete="off">
+      <input type="hidden" name="client" id="selected_client_id">
+      <div id="client_results">
+        {% for cliente in form.fields.client.queryset %}
+          <div class="client-option" data-id="{{ cliente.id }}" data-name="{{ cliente.first_name }} {{ cliente.last_name }}">
+            {{ cliente.first_name }} {{ cliente.last_name }}
+          </div>
+        {% endfor %}
+      </div>
+      <p id="selection_feedback"></p>
+      {% if form.client.errors %}<p style="color:#ff8888; font-size:12px;">{{ form.client.errors|striptags }}</p>{% endif %}
+    </div>
+
+    <div class="field">
+      <label for="id_payment_method">Método de pagamento</label>
+      {{ form.payment_method }}
+      {% if form.payment_method.errors %}<p style="color:#ff8888; font-size:12px;">{{ form.payment_method.errors|striptags }}</p>{% endif %}
+    </div>
+
+    <div class="field" id="field-installments">
+      <label for="id_installments">Parcelas <span style="color:#444; font-weight:400;">(opcional)</span></label>
+      {{ form.installments }}
+      {% if form.installments.errors %}<p style="color:#ff8888; font-size:12px;">{{ form.installments.errors|striptags }}</p>{% endif %}
+    </div>
+
+    <div class="field">
+      <label for="id_in_good_standing">Situação de pagamento</label>
+      {{ form.in_good_standing }}
+      {% if form.in_good_standing.errors %}<p style="color:#ff8888; font-size:12px;">{{ form.in_good_standing.errors|striptags }}</p>{% endif %}
+    </div>
+
+    <button type="submit" class="btn-submit">Salvar venda</button>
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchInput = document.getElementById('client_search');
+      const resultsBox  = document.getElementById('client_results');
+      const options     = document.querySelectorAll('.client-option');
+      const hiddenInput = document.getElementById('selected_client_id');
+      const feedback    = document.getElementById('selection_feedback');
+
+      searchInput.addEventListener('input', function () {
+        const term = this.value.toLowerCase();
+        if (term.length > 0) {
+          let hasAny = false;
+          options.forEach(opt => {
+            const match = opt.dataset.name.toLowerCase().includes(term);
+            opt.style.display = match ? 'block' : 'none';
+            if (match) hasAny = true;
+          });
+          resultsBox.style.display = hasAny ? 'block' : 'none';
+        } else {
+          resultsBox.style.display = 'none';
+        }
+      });
+
+      options.forEach(opt => {
+        opt.addEventListener('click', function () {
+          hiddenInput.value  = this.dataset.id;
+          searchInput.value  = this.dataset.name;
+          feedback.innerText = '✓ ' + this.dataset.name + ' selecionado';
+          resultsBox.style.display = 'none';
+        });
+      });
+
+      document.addEventListener('click', function (e) {
+        if (!resultsBox.contains(e.target) && e.target !== searchInput)
+          resultsBox.style.display = 'none';
+      });
+
+      document.querySelectorAll('select, input[type=number]').forEach(el => {
+        el.style.background = '#1a1a1a';
+        el.style.border = '1px solid #2a2a2a';
+        el.style.borderRadius = '4px';
+        el.style.color = '#e0e0e0';
+        el.style.fontFamily = "'Segoe UI', sans-serif";
+        el.style.fontSize = '14px';
+        el.style.padding = '10px 12px';
+        el.style.outline = 'none';
+        el.style.width = '100%';
+      });
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Carol Semijoias | Registrar Devolução{% endblock %}
+
+{% block extra_css %}
+<style>
+  h1 { font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 8px; }
+  h2 { font-size: 14px; font-weight: 600; color: #888; margin-bottom: 24px; }
+
+  .btn-voltar {
+    display: inline-flex; align-items: center; gap: 6px; color: #555;
+    text-decoration: none; font-size: 13px; margin-bottom: 28px; transition: color .15s;
+  }
+  .btn-voltar:hover { color: #e0e0e0; }
+
+  table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+  thead tr { border-bottom: 1px solid #2a2a2a; }
+  th {
+    text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase; color: #555;
+  }
+  tbody tr { border-bottom: 1px solid #1e1e1e; }
+  td { padding: 12px 14px; color: #ccc; }
+
+  input[type="number"] {
+    background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 4px;
+    color: #e0e0e0; font-size: 13px; padding: 6px 10px; outline: none; width: 80px;
+  }
+  input[type="number"]:focus { border-color: #555; }
+
+  textarea {
+    background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 4px;
+    color: #e0e0e0; font-size: 13px; padding: 10px 12px; outline: none;
+    width: 100%; max-width: 480px; resize: vertical; min-height: 80px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  textarea:focus { border-color: #555; }
+
+  label.field-label {
+    font-size: 11px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: #555; display: block; margin-bottom: 6px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+  <a href="{% url 'sales:info_vendas' venda.id %}" class="btn-voltar">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+    Voltar
+  </a>
+
+  <h1>Registrar devolução</h1>
+  <h2>Venda #{{ venda.id }} — {{ venda.client.full_name }}</h2>
+
+  {% if messages %}
+  <div style="margin-bottom:20px;">
+    {% for msg in messages %}
+    <div style="background:#3d0000; color:#ff8888; padding:12px 16px; border-radius:4px; font-size:13px; border:1px solid #ff0000;">
+      {{ msg }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+
+    <table>
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Qtd na venda</th>
+          <th>Preço unit. c/ desc</th>
+          <th>Qtd a devolver</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in itens %}
+        <tr>
+          <td>{{ item.product.product_name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>R$ {{ item.end_value }}</td>
+          <td>
+            <input type="number" name="quantidade_{{ item.id }}" min="0" max="{{ item.disponivel }}" value="0">
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div style="margin-bottom:24px;">
+      <label class="field-label" for="motivo">Motivo (opcional)</label>
+      <textarea name="motivo" id="motivo"></textarea>
+    </div>
+
+    <div style="display:flex; gap:12px;">
+      <button type="submit" style="
+        padding: 10px 20px; background: #fff; color: #111; border: none;
+        border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer;">
+        Registrar devolução
+      </button>
+      <a href="{% url 'sales:info_vendas' venda.id %}" style="
+        padding: 10px 20px; background: #1a1a1a; color: #888; text-decoration: none;
+        border-radius: 4px; font-size: 13px; font-weight: 600; border: 1px solid #2a2a2a;">
+        Cancelar
+      </a>
+    </div>
+  </form>
+{% endblock %}

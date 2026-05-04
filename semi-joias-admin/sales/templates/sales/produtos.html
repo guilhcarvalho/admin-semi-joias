@@ -136,7 +136,7 @@
           ">Atualizar</a>
         </td>
         <td>
-          <form method="post" action="{% url 'sales:maleta_produto_del' produto.id %}" onsubmit="return confirm('Tem certeza que deseja deletar {{ produto.product_name }}?')">
+          <form method="post" action="{% url 'sales:maleta_produto_del' produto.id %}" onsubmit="return confirm('Tem certeza que deseja deletar {{ produto.product_name|escapejs }}?')">
             {% csrf_token %}
             <button type="submit" style="
               padding: 6px 12px;
