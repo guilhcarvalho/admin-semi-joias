@@ -2,20 +2,21 @@
 name = "semi-joias-admin"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "Guilherme Carvalho"}
-]
+authors = [{name = "Guilherme Carvalho"}]
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = [
-    "django (>=6.0.2,<7.0.0)",
-    "python-dotenv (>=1.2.2,<2.0.0)",
-    "dj-database-url (>=3.1.2,<4.0.0)",
-    "psycopg2-binary (>=2.9.12,<3.0.0)",
-    "gunicorn (>=25.3.0,<26.0.0)",
-    "whitenoise (>=6.12.0,<7.0.0)"
-]
 
+[tool.poetry.group.prod.dependencies]
+django = ">=6.0.2,<7.0.0"
+python-dotenv = ">=1.2.2,<2.0.0"
+dj-database-url = ">=3.1.2,<4.0.0"
+psycopg2-binary = ">=2.9.12,<3.0.0"
+gunicorn = ">=25.3.0,<26.0.0"
+whitenoise = ">=6.12.0,<7.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=9.0.3,<10.0.0"
+pytest-django = ">=4.12.0,<5.0.0"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "mysite.settings"
@@ -25,17 +26,3 @@ testpaths = ["semi-joias-admin/tests"]
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[dependency-groups]
-prod = [
-    "django (>=6.0.2,<7.0.0)",
-    "python-dotenv (>=1.2.2,<2.0.0)",
-    "dj-database-url (>=3.1.2,<4.0.0)",
-    "psycopg2-binary (>=2.9.12,<3.0.0)",
-    "gunicorn (>=25.3.0,<26.0.0)",
-    "whitenoise (>=6.12.0,<7.0.0)"
-]
-dev = [
-    "pytest (>=9.0.3,<10.0.0)",
-    "pytest-django (>=4.12.0,<5.0.0)"
-]
